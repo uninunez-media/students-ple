@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reproductor Doble Sincronizado</title>
+  <style>
+    body { display: flex; gap: 1rem; }
+    video { max-width: 45%; }
+  </style>
+</head>
+<body>
+  <video id="v1" controls preload="auto" src="@@PLUGINFILE@@/Introduccion.mp4"></video>
+  <video id="v2" controls preload="auto" src="@@PLUGINFILE@@/Intro_signs.mp4"></video>
+
+  <script>
+    const v1 = document.getElementById('v1');
+    const v2 = document.getElementById('v2');
+    // Cuando v1 se reproduzca, posiciona y reproduce v2
+    v1.addEventListener('play', () => {
+      v2.currentTime = v1.currentTime;
+      v2.play();
+    });
+    // Cuando pauses v1, pausa también v2
+    v1.addEventListener('pause', () => {
+      v2.pause();
+    });
+    // Sincroniza constantemente las posiciones
+    v1.addEventListener('timeupdate', () => {
+      if (Math.abs(v2.currentTime - v1.currentTime) > 0.1) {
+        v2.currentTime = v1.currentTime;
+      }
+    });
+  </script>
+</body>
+</html>
